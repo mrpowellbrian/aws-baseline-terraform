@@ -176,10 +176,14 @@ resource "aws_cloudtrail" "this" {
 
   enable_log_file_validation = var.cloudtrail_enable_log_file_validation
 
-  kms_key_id = var.cloudtrail_kms_key_arn
+  kms_key_id     = var.cloudtrail_kms_key_arn
+  sns_topic_name = var.enable_sns_alerts ? aws_sns_topic.alerts[0].arn : null
 
   tags = local.common_tags
 
-  # Bucket policy must exist before CloudTrail attempts to write to the bucket.
-  depends_on = [aws_s3_bucket_policy.cloudtrail]
+  # Bucket policy and SNS topic policy must exist before the trail is created.
+  depends_on = [
+    aws_s3_bucket_policy.cloudtrail,
+    aws_sns_topic_policy.alerts,
+  ]
 }

@@ -218,12 +218,16 @@ resource "aws_config_delivery_channel" "this" {
 
   name           = "${var.name_prefix}-delivery-channel"
   s3_bucket_name = aws_s3_bucket.config[0].id
+  sns_topic_arn  = var.enable_sns_alerts ? aws_sns_topic.alerts[0].arn : null
 
   snapshot_delivery_properties {
     delivery_frequency = var.config_delivery_frequency
   }
 
-  depends_on = [aws_config_configuration_recorder.this]
+  depends_on = [
+    aws_config_configuration_recorder.this,
+    aws_sns_topic_policy.alerts,
+  ]
 }
 
 # Separate resource because enabling the recorder before the delivery channel
