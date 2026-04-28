@@ -7,11 +7,13 @@
 #   sns.tf         – security alerts topic
 
 locals {
-  # Merged tag map used wherever resource-level tags are needed.
-  # The AWS provider default_tags block (set by the caller) covers everything;
-  # this local lets submodule resources add per-resource overrides cleanly.
   common_tags = merge(var.tags, {
     ManagedBy = "terraform"
     Module    = "aws-baseline-terraform"
   })
+
+  cloudtrail_trail_name  = "${var.name_prefix}-trail"
+  cloudtrail_bucket_name = "${var.name_prefix}-cloudtrail-logs-${data.aws_caller_identity.current.account_id}"
+  config_bucket_name     = "${var.name_prefix}-config-snapshots-${data.aws_caller_identity.current.account_id}"
+  sns_topic_name         = "${var.name_prefix}-security-alerts"
 }

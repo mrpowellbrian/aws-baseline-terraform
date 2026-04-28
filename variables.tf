@@ -74,6 +74,12 @@ variable "cloudtrail_enable_log_file_validation" {
   default     = true
 }
 
+variable "cloudtrail_kms_key_arn" {
+  description = "KMS key ARN for encrypting CloudTrail logs and the S3 bucket. If null, SSE-S3 (AES256) is used."
+  type        = string
+  default     = null
+}
+
 # ── AWS Config ────────────────────────────────────────────────────────────────
 
 variable "config_managed_rules" {
