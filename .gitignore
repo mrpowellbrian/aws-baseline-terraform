@@ -1,0 +1,22 @@
+# Terraform state and local overrides
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!examples/**/*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Sensitive variable files
+*.auto.tfvars
+
+# OS noise
+.DS_Store
+Thumbs.db
