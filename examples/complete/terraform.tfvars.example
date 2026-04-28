@@ -1,0 +1,9 @@
+# Copy to terraform.tfvars and fill in your values.
+# terraform.tfvars is gitignored to prevent committing account-specific values.
+
+name_prefix = "acme-prod"
+
+tags = {
+  CostCenter = "platform-shared"
+  Owner      = "platform-team@example.com"
+}
