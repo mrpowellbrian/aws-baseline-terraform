@@ -1,0 +1,57 @@
+name: Validate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Terraform fmt / validate / tflint / tfsec
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~> 1.7"
+
+      - name: Terraform Format Check
+        run: terraform fmt -recursive -check .
+
+      - name: Terraform Init (root module)
+        run: terraform init -backend=false
+
+      - name: Terraform Validate (root module)
+        run: terraform validate
+
+      - name: Terraform Init (examples/complete)
+        working-directory: examples/complete
+        run: terraform init -backend=false
+
+      - name: Terraform Validate (examples/complete)
+        working-directory: examples/complete
+        run: terraform validate
+
+      - name: Setup tflint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: "~> 0.50"
+
+      - name: tflint Init
+        run: tflint --init
+
+      - name: tflint
+        run: tflint --recursive
+
+      - name: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          soft_fail: false
+          version: latest
